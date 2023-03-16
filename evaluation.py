@@ -1,4 +1,4 @@
-def fitness_8queen (individual): 
+def fitness(individual): 
     """Compute fitness of an invidual solution (maximization)"""    
 
     fitness = 0
