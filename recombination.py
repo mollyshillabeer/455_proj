@@ -1,6 +1,9 @@
 #imports
 import random
 
+#TODO: how to make this work while ensuring the resulting solution is valid?
+# swap only rooms of the same size?
+# pick 2 rooms to swap, for the larger room keep only the guests who can't move to smaller one?
 def permutation_cut_and_crossfill (parent1, parent2):
     """cut-and-crossfill crossover for permutation representations"""
 
