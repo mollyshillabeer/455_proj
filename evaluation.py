@@ -9,5 +9,6 @@ def fitness(individual,rooms,guests):
                 #TODO: accessibility, ocean view, etc
                 #(cost+cost per person*num people)*duration
                 currGuest=guests[individual[i][j]]
-                fitness+=(currRoom.base_cost+currRoom.cost_per_person*currGuest.size)*currGuest.num_days
+                if currGuest.size <= currRoom.size:
+                    fitness+=(currRoom.base_cost+currRoom.cost_per_person*currGuest.size)*currGuest.num_days
     return fitness
