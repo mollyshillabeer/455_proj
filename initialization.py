@@ -1,6 +1,8 @@
 #imports
 from itertools import permutations
 import random
+import pandas as pd
+import numpy as np
 
 #TODO: this needs serious modification to make valid permutations and include specific data
 #use hotel and guest classes
@@ -16,3 +18,32 @@ def permutation (pop_size, chrom_length):
     population = [list(t) for t in population] #convert from tuple to list
     #student code end
     return population
+
+def make_hotel(num_rooms):
+    #all have ocean views, 14 rooms in total
+    #junior suite: 1 queen, 2 people. - 3 available. balcony. $880/night
+    #master loft suite: double and sofa bed, 3 people. balcony. $880/night
+    #junior cave suite: 1 king, 2 people. balcony. $953/night
+    #deluxe suite: 1 king, 2 sofa bed, 4 people. balcony. $1246/night
+    #petit cave suite: 1 king, 2 people. outdoor jacuzzi. $1392/night
+    #honeymoon suite: 1 king, 2 people. jacuzzi & balcony. $1686/night
+    #cave honeymoon suite: 1 king, 2 people. jacuzzi & balcony. $1760/night
+    #black rock honeymoon suite: 1 king, 2 people. jacuzzi & balcony. $1906/night
+    #cave suite: 1 king, 1 sofa bed, 4 people. jacuzzi & balcony. $1686/night
+    #superior suite: 1 king, 2 people. jacuzzi & balcony. $1686/night
+    #grand cave suite: 1 king, 1 sofa bed, 4 people. indoor and outdoor jacuzzi. $2126/night
+    #royal suite: 2 kings, 1 sofa bed, 6 people. jacuzzi & balcony. $2492/night
+    pass
+
+#subset of guests to use in the EA
+#results are placed in guests.csv, should read from that for initialization
+def make_guests():
+    #https://www.kaggle.com/datasets/ahsan81/hotel-reservations-classification-dataset
+    df=pd.read_csv('HotelReservations.csv')
+    df1=df[['no_of_adults','no_of_children','no_of_weekend_nights','no_of_week_nights']]
+    df1.insert(0,'num_guests',df1.loc[:,['no_of_adults','no_of_children']].sum(axis=1))
+    df1.insert(0,'duration',df1.loc[:,['no_of_weekend_nights','no_of_week_nights']].sum(axis=1))
+    df1 = df1.drop(df1[df1.num_guests > 6].index)
+    df1 = df1.drop(df1[df1.duration == 0].index)
+    guests = df1.sample(n=1000,random_state=0)
+    guests.to_csv('guests.csv',index=False)
