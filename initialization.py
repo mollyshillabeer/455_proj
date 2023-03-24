@@ -92,5 +92,3 @@ def permutation(pop_size, num_guests):
             indiv.append(selected_guests)
         population.append(indiv)
     return population, hotel, guests
-
-permutation(20, 70)
