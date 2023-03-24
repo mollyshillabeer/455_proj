@@ -6,21 +6,6 @@ import numpy as np
 from Hotel import HotelRoom
 from Guest import GuestGroup
 
-#TODO: this needs serious modification to make valid permutations and include specific data
-#use hotel and guest classes
-def permutation (pop_size, chrom_length):
-    """initialize a population of permutation"""
-
-    population = []
-    # student code begin
-    # each individual is represented by a list of integers from 1 to 8
-    chrom = list(range(1,chrom_length+1))
-    #randomly select initial population from all possible solutions
-    population = random.sample(list(permutations(chrom)),pop_size)
-    population = [list(t) for t in population] #convert from tuple to list
-    #student code end
-    return population
-
 def make_hotel():
     #all have ocean views, 14 rooms in total
     #junior suite: 1 queen, 2 people. - 3 available. balcony. $880/night
@@ -37,20 +22,19 @@ def make_hotel():
     #royal suite: 2 kings, 1 sofa bed, 6 people. jacuzzi & balcony. $2492/night
     rooms=[]
     for i in range(3):
-        rooms.append(2,880,40)
-    rooms.append(2,953,40)
-    rooms.append(2,1392,40)
-    rooms.append(2,1686,40)
-    rooms.append(2,1686,40)
-    rooms.append(2,1760,40)
-    rooms.append(2,1906,40)
-    rooms.append(3,880,40)
-    rooms.append(4,1246,40)
-    rooms.append(4,1686,40)
-    rooms.append(4,2126,40)
-    rooms.append(6,2492,40)
+        rooms.append(HotelRoom(2,880,40))
+    rooms.append(HotelRoom(2,953,40))
+    rooms.append(HotelRoom(2,1392,40))
+    rooms.append(HotelRoom(2,1686,40))
+    rooms.append(HotelRoom(2,1686,40))
+    rooms.append(HotelRoom(2,1760,40))
+    rooms.append(HotelRoom(2,1906,40))
+    rooms.append(HotelRoom(3,880,40))
+    rooms.append(HotelRoom(4,1246,40))
+    rooms.append(HotelRoom(4,1686,40))
+    rooms.append(HotelRoom(4,2126,40))
+    rooms.append(HotelRoom(6,2492,40))
     return rooms
-    
 
 #subset of guests to use in the EA
 #results are placed in guests.csv, should read from that for initialization
@@ -64,11 +48,49 @@ def make_guest_file():
     df1 = df1.drop(df1[df1.duration == 0].index)
     guests = df1.sample(n=1000,random_state=0)
     guests.to_csv('guests.csv',index=False)
-    
+
 def make_guests(num_guests):
     #set num_guests to 70
     df=pd.read_csv('guests.csv')
     guests = []
     for i in range(num_guests):
-        guests.append(GuestGroup(df.iloc[i]))
-make_guests(70)
+        curr_row=df.iloc[i]
+        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration))
+    return guests
+
+#could do a second version that allows for conflicts in room sizes
+def permutation(pop_size, num_guests):
+    """initialize a population of permutation"""
+    population = []
+    hotel = make_hotel()
+    guests = make_guests(num_guests)
+    num_rooms = len(hotel)
+    num_guests_per_room = num_guests//num_rooms
+    #for each individual in population
+    for i in range(pop_size):
+        indiv=[]
+        guests_dict = {k: v for k,v in enumerate(guests)}
+        #for each room in hotel
+        for j in range(num_rooms):
+            #pick len(guests)/num_rooms guests to fill
+            possible_guests = [a for a in guests_dict if guests_dict[a].size<=hotel[j].size]
+            num_options = len(possible_guests)
+            
+            if num_options >= num_guests_per_room:
+                selected_guests = random.sample(possible_guests,num_guests_per_room)
+                #remove booking from guests
+                for elem in selected_guests:
+                    guests_dict.pop(elem)
+            elif num_options != 0:
+                selected_guests = possible_guests
+                for elem in selected_guests:
+                    guests_dict.pop(elem)
+                selected_guests.extend([-1]*(num_guests_per_room-num_options))
+            else:
+                selected_guests=[-1]*num_guests_per_room
+
+            indiv.append(selected_guests)
+        population.append(indiv)
+    return population, hotel, guests
+
+permutation(20, 70)
