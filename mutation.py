@@ -1,5 +1,5 @@
 import random
-from Guest import Guest
+from Guest import GuestGroup
 from Hotel import HotelRoom
 
 #TODO: make sure solution is valid: number of guests can't exceed room size
@@ -62,5 +62,5 @@ def permutation_swap (individual, hotel ,guest):
 hotel = []
 hotel.append(HotelRoom(7,1000,40))
 guest = []
-guest.append(Guest(3,5))
+guest.append(GuestGroup(3,5))
 permutation_swap ([[1,2],[3,4]],hotel,guest)
