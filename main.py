@@ -1,6 +1,8 @@
 # imports
 import random
 import numpy
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # import your own modules
 import initialization
@@ -11,7 +13,29 @@ import mutation
 import survivor_selection
 
 
-#TODO: parameter control
+#TODO: parameter control, probability of room getting destroyed, swap clients in and out from hotel
+
+def visualization(maxes,avgs,guests):
+    #plot max fitness per generation
+    ax = sns.lineplot(data=maxes)
+    ax.set(xlabel="generation",ylabel="fitness",title="Max Fitness by Generation")
+    plt.show()
+    
+    #plot average fitness per generation
+    ax1 = sns.lineplot(data=avgs)
+    ax1.set(xlabel="generation",ylabel="fitness",title="Average Fitness by Generation")
+    plt.show()
+    
+    #histogram of guest sizes and durations - demonstrating properties of guest dataset
+    sizes = [a.size for a in guests]
+    ax2 = sns.histplot(data=sizes)
+    ax2.set(xlabel="size",ylabel="num reservations",title="Distribution of Reservation Sizes")
+    plt.show()
+    
+    durations = [a.num_days for a in guests]
+    ax3 = sns.histplot(data=durations)
+    ax3.set(xlabel="length of stay",ylabel="num reservations",title="Distribution of Reservation Sizes")
+    plt.show()
 
 def main():
     random.seed()
@@ -33,6 +57,8 @@ def main():
         fitness.append(evaluation.fitness(population[i], hotel, guests))
     print("generation", gen, ": best fitness", max(fitness), "\taverage fitness", sum(fitness)/len(fitness))
 
+    max_fitnesses = []
+    avg_fitnesses = []
     # evolution begins
     while gen < gen_limit:
         
@@ -76,13 +102,17 @@ def main():
         
         gen += 1  # update the generation counter
         print("generation", gen, ": best fitness", max(fitness), "average fitness", sum(fitness)/len(fitness))
-        
+        max_fitnesses.append(max(fitness))
+        avg_fitnesses.append(sum(fitness)/len(fitness))
     # evolution ends
     # print the final best solution(s)
     k = 0
     for i in range (0, pop_size):
         if fitness[i] == max(fitness):
             print("best solution", k, population[i], fitness[i])
-            k = k+1
+            k += 1
+
+    #visualize results
+    visualization(max_fitnesses,avg_fitnesses,guests)
 
 main()
