@@ -42,6 +42,7 @@ def main():
     numpy.random.seed()
 
     num_guests = 28 #should be multiples of 14
+    num_guests_per_room = 2
     pop_size = 20  
     mating_pool_size = int(pop_size*0.5) # has to be even
     tournament_size = 4
@@ -51,7 +52,7 @@ def main():
 
     # initialize population
     gen = 0 # initialize the generation counter
-    population, hotel, guests = initialization.permutation(pop_size, num_guests)
+    population, backups, hotel, guests = initialization.permutation(pop_size, num_guests, num_guests_per_room)
     fitness = []
     for i in range (0, pop_size):
         fitness.append(evaluation.fitness(population[i], hotel, guests))

@@ -59,16 +59,17 @@ def make_guests(num_guests):
     return guests
 
 #could do a second version that allows for conflicts in room sizes
-def permutation(pop_size, num_guests):
+def permutation(pop_size, num_guests, num_guests_per_room):
     """initialize a population of permutation"""
     population = []
+    backups=[]
     hotel = make_hotel()
     guests = make_guests(num_guests)
     num_rooms = len(hotel)
-    num_guests_per_room = num_guests//num_rooms
     #for each individual in population
     for i in range(pop_size):
         indiv=[]
+        backup=[] #guests that could be assigned in future but currently aren't
         guests_dict = {k: v for k,v in enumerate(guests)}
         #for each room in hotel
         for j in range(num_rooms):
@@ -90,5 +91,6 @@ def permutation(pop_size, num_guests):
                 selected_guests=[-1]*num_guests_per_room
 
             indiv.append(selected_guests)
+        backup.append([a for a in guests_dict])
         population.append(indiv)
-    return population, hotel, guests
+    return population, backups, hotel, guests
