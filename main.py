@@ -41,6 +41,7 @@ def main():
     random.seed()
     numpy.random.seed()
 
+    #parameters
     num_guests = 28 #should be multiples of 14
     num_guests_per_room = 2
     pop_size = 20  
@@ -49,13 +50,14 @@ def main():
     xover_rate = 0.9
     mut_rate = 0.2
     gen_limit = 50
+    max_days = 3000 #number of days the hotel is booking for
 
     # initialize population
     gen = 0 # initialize the generation counter
     population, backups, hotel, guests = initialization.permutation(pop_size, num_guests, num_guests_per_room)
     fitness = []
     for i in range (0, pop_size):
-        fitness.append(evaluation.fitness(population[i], hotel, guests))
+        fitness.append(evaluation.fitness(population[i], hotel, guests, max_days))
     print("generation", gen, ": best fitness", max(fitness), "\taverage fitness", sum(fitness)/len(fitness))
 
     max_fitnesses = []
@@ -92,10 +94,10 @@ def main():
                 off2 = mutation.permutation_swap(off2,hotel,guests)
         
             offspring.append(off1)
-            offspring_fitness.append(evaluation.fitness(off1, hotel, guests))
+            offspring_fitness.append(evaluation.fitness(off1, hotel, guests, max_days))
             offspring.append(off2)
-            offspring_fitness.append(evaluation.fitness(off2, hotel, guests))
-            i = i+2  # update the counter
+            offspring_fitness.append(evaluation.fitness(off2, hotel, guests, max_days))
+            i+=2  # update the counter
 
         # organize the population of next generation
         population, fitness = survivor_selection.mu_plus_lambda(population, fitness, offspring, offspring_fitness)
