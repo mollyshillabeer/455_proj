@@ -72,6 +72,7 @@ def permutation(pop_size, num_guests, num_guests_per_room):
         backup=[] #guests that could be assigned in future but currently aren't
         guests_dict = {k: v for k,v in enumerate(guests)}
         #for each room in hotel
+        #TODO: should randomly pick room
         for j in range(num_rooms):
             #pick len(guests)/num_rooms guests to fill
             possible_guests = [a for a in guests_dict if guests_dict[a].size<=hotel[j].size]

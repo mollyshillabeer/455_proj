@@ -1,35 +1,41 @@
 #imports
 import random
-
+import copy
 #TODO: how to make this work while ensuring the resulting solution is valid?
-# swap only rooms of the same size?
-# pick 2 rooms to swap, for the larger room keep only the guests who can't move to smaller one?
-def permutation_cut_and_crossfill (parent1, parent2):
-    """cut-and-crossfill crossover for permutation representations"""
-    for i in range(0, 13):
-        """
-        loop through parent1, for each room select 1 of the guests
-        swap with same guest in parent2
-        """
+def find_room(arr, target):
+    for i in range(len(arr)):
+        for j in range(len(arr[i])):
+            if arr[i][j] == target:
+                return i, j
+            
+def permutation_cut_and_crossfill (p1, p2, rooms, guests):
 
-        offspring1 = []
-        offspring2 = []
-        
-        # student code begin
-        #randomly select crossover point
-        crossover_point = random.randint(0,len(parent1)-1)
-        #preserve 1st part of parents
-        offspring1=parent1[:crossover_point]
-        offspring2=parent2[:crossover_point]
-        #fill rest of offspring with values from opposite parent, starting from
-        #after the crossover point then wrapping around to the front
-        list1 = parent2[crossover_point:]+parent2[:crossover_point]
-        list2 = parent1[crossover_point:]+parent1[:crossover_point]
-        for i in list1:
-            if i not in offspring1:
-                offspring1.append(i)
-        for i in list2:
-            if i not in offspring2:
-                offspring2.append(i)
-        # student code end
+    # Randomly Select a Guest
+    selected_guest = random.randint(0, len(guests)-1)
+
+    # Record Index of Selected Guest in Both Room Assignments
+    room_index1, guest_index1 = find_room(p1, selected_guest)
+    room_index2, guest_index2 = find_room(p2, selected_guest)
+    
+    # Copy Guest Room Assignments
+    offspring1 = copy.deepcopy(p1)
+    offspring2 = copy.deepcopy(p2)
+    
+    # Swap Guests in P1
+    temp1 = offspring1[room_index1][guest_index1]
+    offspring1[room_index1][guest_index1] = offspring1[room_index2][guest_index2]
+    offspring1[room_index2][guest_index2] = temp1
+    
+    # Swap guests in P2
+    temp2 = offspring2[room_index2][guest_index2]
+    offspring2[room_index2][guest_index2] = offspring2[room_index1][guest_index1]
+    offspring2[room_index1][guest_index1] = temp2
+    
+    for room_id, ass_guests in enumerate(offspring1):
+        for guest_id in ass_guests:
+            # Invalid room combination found, reset selection
+            if rooms[room_id].size < guests[guest_id].size:
+                offspring1 = p1
+                offspring2 = p2
+                break
     return offspring1, offspring2
