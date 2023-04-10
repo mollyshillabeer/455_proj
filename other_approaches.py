@@ -6,8 +6,8 @@ from operator import attrgetter
 
 #TODO: run from within main, take guests and hotel as params
 def greedy():
-    num_guests=28
-    num_guests_per_room=2
+    num_guests=70
+    num_guests_per_room=5
     max_days=3000
     guests = initialization.make_guests(num_guests)
     hotel = initialization.make_hotel()
@@ -34,4 +34,3 @@ def greedy():
 
     fitness = evaluation.fitness(solution,hotel,guests,max_days)
     return solution, fitness
-    
