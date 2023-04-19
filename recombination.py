@@ -31,18 +31,12 @@ def permutation_cut_and_crossfill (p1, p2, rooms, guests):
     offspring2[room_index2][guest_index2] = offspring2[room_index1][guest_index1]
     offspring2[room_index1][guest_index1] = temp2
     
-    # Check invalid combinations in offspring1
-    for room_id, ass_guests in enumerate(offspring1):
-        for guest_id in ass_guests:
-            # Invalid room combination found, reset selection
-            if rooms[room_id].size < guests[guest_id].size:
-                return p1, p2
+    # Invalid room combination found in offspring1, reset selection
+    if rooms[room_index1].size < offspring1[room_index1][guest_index1].size or rooms[room_index2].size < offspring1[room_index2][guest_index2].size: 
+        return p1, p2
     
-    # Check invalid combinations in offspring2
-    for room_id, ass_guests in enumerate(offspring2):
-        for guest_id in ass_guests:
-            # Invalid room combination found, reset selection
-            if rooms[room_id].size < guests[guest_id].size:
-                return p1, p2
-        
+    # Invalid room combination found in offspring2, reset selection
+    if rooms[room_index1].size < offspring2[room_index1][guest_index1].size or rooms[room_index2].size < offspring2[room_index2][guest_index2].size:
+        return p1, p2
+    
     return offspring1, offspring2
