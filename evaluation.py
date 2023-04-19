@@ -19,6 +19,7 @@ def fitness(individual,rooms,guests,max_days):
                     break
                 
                 #if a guest group can't fit in the room, they can't be booked, so no profit
+                #profit is calculated as cost per night*number of nights
                 if currGuest.size <= currRoom.size:
                     fitness+=(currRoom.base_cost+currRoom.cost_per_person*currGuest.size)*currGuest.num_days
     return fitness

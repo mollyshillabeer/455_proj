@@ -2,7 +2,7 @@ import random
 
 
 def mu_plus_lambda(current_pop, current_fitness, offspring, offspring_fitness):
-    """mu+lambda selection"""
+    """mu+lambda selection compares the full set of old generation and offspring"""
     population = []
     fitness = []
 
@@ -20,8 +20,7 @@ def mu_plus_lambda(current_pop, current_fitness, offspring, offspring_fitness):
 
 
 def replacement(current_pop, current_fitness, offspring, offspring_fitness):
-    """replacement selection"""
-
+    """replacement selection replaces the worst members of the old generation with the offspring"""
     population = []
     fitness = []
 

@@ -1,7 +1,8 @@
 #imports
 import random
 import copy
-#TODO: how to make this work while ensuring the resulting solution is valid?
+
+#find what room a specified guest is staying in
 def find_room(arr, target):
     for i in range(len(arr)):
         for j in range(len(arr[i])):
@@ -9,7 +10,6 @@ def find_room(arr, target):
                 return i, j
             
 def permutation_cut_and_crossfill (p1, p2, rooms, guests):
-
     # Randomly Select a Guest
     selected_guest = random.randint(0, len(guests)-1)
 
