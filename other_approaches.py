@@ -4,8 +4,7 @@ import initialization
 import evaluation
 from operator import attrgetter
 
-#TODO: run from within main, take guests and hotel as params
-def greedy():
+def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
     '''
     Greedy approach to solving this problem. Fills the most expensive rooms first, with the largest groups possible.
     This should mimic how humans would schedule something for profit maximization.
