@@ -2,6 +2,7 @@
 #brute force?
 import initialization
 import evaluation
+import time
 from operator import attrgetter
 
 def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
@@ -9,6 +10,7 @@ def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
     Greedy approach to solving this problem. Fills the most expensive rooms first, with the largest groups possible.
     This should mimic how humans would schedule something for profit maximization.
     '''
+    start_time = time.time()
     solution = [None]*len(hotel)
     hotel_dict = {k: v.base_cost for k,v in enumerate(hotel)}
     guests_dict = {k: v for k,v in enumerate(guests)}
@@ -38,4 +40,7 @@ def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
         solution[next_room]=selected_guests
 
     fitness = evaluation.fitness(solution,hotel,guests,max_days)
+    #time.sleep(3)
+    end_time = time.time()
+    elapsed_time = end_time-start_time
     return solution, fitness

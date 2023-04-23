@@ -1,8 +1,9 @@
 # imports
 import random
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import time
 from itertools import product
 
 # import your own modules
@@ -18,7 +19,6 @@ import other_approaches
 #TODO: probability of room getting destroyed, swap clients in and out from hotel
 
 def visualization(maxes,avgs,guests,greedy_fitness):
-    #TODO: histogram of mbf over a bunch of runs
     #plot max fitness per generation
     ax = sns.lineplot(data=maxes)
     ax.axhline(greedy_fitness[1])
@@ -44,7 +44,7 @@ def visualization(maxes,avgs,guests,greedy_fitness):
 
 def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit,verbose=True):
     random.seed()
-    numpy.random.seed()
+    np.random.seed()
 
     #parameters set by the hotel requirements for how many people they want to book for 
     num_guests = 70 #should be multiples of 14
@@ -57,6 +57,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
     num_evals = 0 #count number of fitness evals as an efficiency measure
     population, backups, hotel, guests = initialization.permutation(pop_size, num_guests, num_guests_per_room)
     greedy_res = other_approaches.greedy(num_guests, num_guests_per_room, max_days, guests, hotel)
+    start_time = time.time()
     fitness = []
     for i in range (0, pop_size):
         num_evals+=1
@@ -116,13 +117,15 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
         avg_fitnesses.append(sum(fitness)/len(fitness))
         
         if gen > 15:
-            if sum(numpy.absolute(numpy.diff(max_fitnesses[-15:])))/15 < 5:
+            if sum(np.absolute(np.diff(max_fitnesses[-15:])))/15 < 5:
                 if verbose:
                     print("Stopping evoluation early, quality has stopped improving.")
                 break
 
     # evolution ends
     # print the final best solution(s)
+    end_time = time.time()
+    elapsed_time = end_time-start_time
     if verbose:
         k = 0
         for i in range (0, pop_size):
@@ -133,7 +136,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
         visualization(max_fitnesses,avg_fitnesses,guests,greedy_res)
         #compare to alternate approach
         print("greedy solution and fitness: "+str(greedy_res))
-    return max(fitness), num_evals
+    return max(fitness), num_evals, elapsed_time
 
 def param_tuning():
     '''
@@ -169,18 +172,21 @@ def stats(num_tries,threshold):
     '''
     fitnesses=[]
     num_evals=[]
+    total_time = []
     num_past_threshold=0
     for i in range(num_tries):
         metrics = main(50,50,15,0.9,0.5,150,verbose=False)
         fitness = metrics[0]
         num_evals.append(metrics[1])
+        total_time.append(metrics[2])
         if fitness > threshold:
             num_past_threshold+=1
         fitnesses.append(fitness)
     print("Mean Best Fitness: "+str(sum(fitnesses)/len(fitnesses)))
     print("Success Rate: "+ str(num_past_threshold/num_tries))
     print("AES: "+str(sum(num_evals)/len(num_evals)))
+    print("Average Elapsed Time: "+str(sum(total_time)/len(total_time)))
     sns.histplot(data=fitnesses)
     plt.show()
 
-stats(200,370000)
+stats(1,370000)
