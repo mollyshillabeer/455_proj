@@ -9,11 +9,6 @@ def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
     Greedy approach to solving this problem. Fills the most expensive rooms first, with the largest groups possible.
     This should mimic how humans would schedule something for profit maximization.
     '''
-    num_guests=70
-    num_guests_per_room=5
-    max_days=3000
-    guests = initialization.make_guests(num_guests)
-    hotel = initialization.make_hotel()
     solution = [None]*len(hotel)
     hotel_dict = {k: v.base_cost for k,v in enumerate(hotel)}
     guests_dict = {k: v for k,v in enumerate(guests)}
@@ -24,7 +19,10 @@ def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
         hotel_dict.pop(next_room)
 
         #select from guests of a group size equal to or less than the capacity of the room, pick the largest ones
+        #also remove guests that need accessible and smoke-free rooms if the room doesnt have those properites
         possible_guests = [a for a in guests_dict if guests_dict[a].size<=hotel[next_room].size]
+        possible_guests = [a for a in possible_guests if (guests_dict[a].accessible==hotel[next_room].accessible or not guests_dict[a].accessible)]
+        possible_guests = [a for a in possible_guests if (guests_dict[a].smoke_free==hotel[next_room].smoke_free or not guests_dict[a].smoke_free)]
         selected_guests = sorted(possible_guests,key=lambda x: guests[x].size, reverse=True)
         
         #pick the correct number of guests

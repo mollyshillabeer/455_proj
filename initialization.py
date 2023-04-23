@@ -29,18 +29,18 @@ def make_hotel():
     '''
     rooms=[]
     for i in range(3):
-        rooms.append(HotelRoom(2,880,40, accesible=True, smoke_free=False))
-    rooms.append(HotelRoom(2,953,40, accesible=False, smoke_free=True))
-    rooms.append(HotelRoom(2,1392,40, accesible=True, smoke_free=False))
-    rooms.append(HotelRoom(2,1686,40, accesible=True, smoke_free=True))
-    rooms.append(HotelRoom(2,1686,40, accesible=False, smoke_free=False))
-    rooms.append(HotelRoom(2,1760,40, accesible=True, smoke_free=True))
-    rooms.append(HotelRoom(2,1906,40, accesible=False, smoke_free=True))
-    rooms.append(HotelRoom(3,880,40, accesible=False, smoke_free=True))
-    rooms.append(HotelRoom(4,1246,40, accesible=False, smoke_free=True))
-    rooms.append(HotelRoom(4,1686,40, accesible=True, smoke_free=True))
-    rooms.append(HotelRoom(4,2126,40, accesible=False, smoke_free=False))
-    rooms.append(HotelRoom(6,2492,40, accesible=False, smoke_free=True))
+        rooms.append(HotelRoom(2,880,40, accessible=True, smoke_free=False))
+    rooms.append(HotelRoom(2,953,40, accessible=False, smoke_free=True))
+    rooms.append(HotelRoom(2,1392,40, accessible=True, smoke_free=False))
+    rooms.append(HotelRoom(2,1686,40, accessible=True, smoke_free=True))
+    rooms.append(HotelRoom(2,1686,40, accessible=False, smoke_free=False))
+    rooms.append(HotelRoom(2,1760,40, accessible=True, smoke_free=True))
+    rooms.append(HotelRoom(2,1906,40, accessible=False, smoke_free=True))
+    rooms.append(HotelRoom(3,880,40, accessible=False, smoke_free=True))
+    rooms.append(HotelRoom(4,1246,40, accessible=False, smoke_free=True))
+    rooms.append(HotelRoom(4,1686,40, accessible=True, smoke_free=True))
+    rooms.append(HotelRoom(4,2126,40, accessible=False, smoke_free=False))
+    rooms.append(HotelRoom(6,2492,40, accessible=False, smoke_free=True))
     return rooms
 
 def make_guest_file():
@@ -67,7 +67,7 @@ def make_guests(num_guests):
     guests = []
     for i in range(num_guests):
         curr_row=df.iloc[i]
-        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration,accesible=rand_select(10),smoke_free=rand_select(10)))
+        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration,accessible=rand_select(10),smoke_free=rand_select(10)))
     return guests
 
 #TODO: could do a second version that allows for conflicts in room sizes
@@ -85,7 +85,6 @@ def permutation(pop_size, num_guests, num_guests_per_room):
         backup=[] #guests that could be assigned in future but currently aren't
         guests_dict = {k: v for k,v in enumerate(guests)}
         #for each room in the hotel, pick from the subset of guests that can fit into the room
-        #TODO: should randomly pick room
         for j in range(num_rooms):
             possible_guests = [a for a in guests_dict if guests_dict[a].size<=hotel[j].size]
             num_options = len(possible_guests)

@@ -15,11 +15,14 @@ import survivor_selection
 import other_approaches
 
 
-#TODO: parameter control, probability of room getting destroyed, swap clients in and out from hotel
+#TODO: probability of room getting destroyed, swap clients in and out from hotel
 
-def visualization(maxes,avgs,guests):
+def visualization(maxes,avgs,guests,greedy_fitness):
+    #TODO: histogram of mbf over a bunch of runs
     #plot max fitness per generation
     ax = sns.lineplot(data=maxes)
+    ax.axhline(greedy_fitness[1])
+    ax.axhline(370000)
     ax.set(xlabel="generation",ylabel="fitness",title="Max Fitness by Generation")
     plt.show()
     
@@ -52,6 +55,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
     # initialize population and starting fitness values
     gen = 0 # initialize the generation counter
     population, backups, hotel, guests = initialization.permutation(pop_size, num_guests, num_guests_per_room)
+    greedy_res = other_approaches.greedy(num_guests, num_guests_per_room, max_days, guests, hotel)
     fitness = []
     for i in range (0, pop_size):
         fitness.append(evaluation.fitness(population[i], hotel, guests, max_days))
@@ -117,9 +121,9 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
                 print("best solution", k, population[i], fitness[i])
                 k += 1
         #visualize results
-        visualization(max_fitnesses,avg_fitnesses,guests)
+        visualization(max_fitnesses,avg_fitnesses,guests,greedy_res)
         #compare to alternate approach
-        print("greedy solution and fitness: "+str(other_approaches.greedy(num_guests, num_guests_per_room, max_days, guests, hotel)))
+        print("greedy solution and fitness: "+str(greedy_res))
     return max(fitness)
 
 def param_tuning():
@@ -147,13 +151,23 @@ def param_tuning():
             max_arr=arr
     print("Params: "+str(max_arr)+" Fitness: "+str(max_fit))
     
-def stats(num_tries):
+def stats(num_tries,threshold):
     '''
     Run the EA n times and calculate various metrics to evaluate success.
-    - Average max fitness
+    - mean best fitness
+    - success rate
+    - average number of evaluations
     '''
     fitnesses=[]
+    num_past_threshold=0
     for i in range(num_tries):
-        fitness = main(50,50,15,0.9,0.5,150,verbose=False)
+        fitness = main(50,50,15,0.9,0.5,150,verbose=True)
+        if fitness > threshold:
+            num_past_threshold+=1
         fitnesses.append(fitness)
-    print("Average Max Fitness: "+str(sum(fitnesses)/len(fitnesses)))
+    print("Mean Best Fitness: "+str(sum(fitnesses)/len(fitnesses)))
+    print("Success Rate: "+ str(num_past_threshold/num_tries))
+    sns.histplot(data=fitnesses)
+    plt.show()
+
+stats(1,370000)
