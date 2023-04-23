@@ -175,7 +175,7 @@ def stats(num_tries,threshold):
     total_time = []
     num_past_threshold=0
     for i in range(num_tries):
-        metrics = main(50,50,15,0.9,0.5,150,verbose=False)
+        metrics = main(50,50,15,0.9,0.5,150,verbose=True)
         fitness = metrics[0]
         num_evals.append(metrics[1])
         total_time.append(metrics[2])
@@ -186,7 +186,8 @@ def stats(num_tries,threshold):
     print("Success Rate: "+ str(num_past_threshold/num_tries))
     print("AES: "+str(sum(num_evals)/len(num_evals)))
     print("Average Elapsed Time: "+str(sum(total_time)/len(total_time)))
-    sns.histplot(data=fitnesses)
-    plt.show()
+    if num_tries > 1:
+        sns.histplot(data=fitnesses)
+        plt.show()
 
 stats(1,370000)
