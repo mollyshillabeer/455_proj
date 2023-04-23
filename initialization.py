@@ -6,6 +6,10 @@ import numpy as np
 from Hotel import HotelRoom
 from Guest import GuestGroup
 
+def rand_select(percent=50):
+    '''Utility function for randomly setting properties of guests'''
+    return random.randrange(100) < percent
+
 def make_hotel():
     '''
     Make the hotel as a list of hotel rooms. Using information from Athina Luxury Suites
@@ -25,18 +29,18 @@ def make_hotel():
     '''
     rooms=[]
     for i in range(3):
-        rooms.append(HotelRoom(2,880,40))
-    rooms.append(HotelRoom(2,953,40))
-    rooms.append(HotelRoom(2,1392,40))
-    rooms.append(HotelRoom(2,1686,40))
-    rooms.append(HotelRoom(2,1686,40))
-    rooms.append(HotelRoom(2,1760,40))
-    rooms.append(HotelRoom(2,1906,40))
-    rooms.append(HotelRoom(3,880,40))
-    rooms.append(HotelRoom(4,1246,40))
-    rooms.append(HotelRoom(4,1686,40))
-    rooms.append(HotelRoom(4,2126,40))
-    rooms.append(HotelRoom(6,2492,40))
+        rooms.append(HotelRoom(2,880,40, accesible=True, smoke_free=False))
+    rooms.append(HotelRoom(2,953,40, accesible=False, smoke_free=True))
+    rooms.append(HotelRoom(2,1392,40, accesible=True, smoke_free=False))
+    rooms.append(HotelRoom(2,1686,40, accesible=True, smoke_free=True))
+    rooms.append(HotelRoom(2,1686,40, accesible=False, smoke_free=False))
+    rooms.append(HotelRoom(2,1760,40, accesible=True, smoke_free=True))
+    rooms.append(HotelRoom(2,1906,40, accesible=False, smoke_free=True))
+    rooms.append(HotelRoom(3,880,40, accesible=False, smoke_free=True))
+    rooms.append(HotelRoom(4,1246,40, accesible=False, smoke_free=True))
+    rooms.append(HotelRoom(4,1686,40, accesible=True, smoke_free=True))
+    rooms.append(HotelRoom(4,2126,40, accesible=False, smoke_free=False))
+    rooms.append(HotelRoom(6,2492,40, accesible=False, smoke_free=True))
     return rooms
 
 def make_guest_file():
@@ -63,7 +67,7 @@ def make_guests(num_guests):
     guests = []
     for i in range(num_guests):
         curr_row=df.iloc[i]
-        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration))
+        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration,accesible=rand_select(10),smoke_free=rand_select(10)))
     return guests
 
 #TODO: could do a second version that allows for conflicts in room sizes

@@ -128,10 +128,10 @@ def param_tuning():
     Final max fitness is compared and the best one is printed out.
     '''
     print("Tuning Now")
-    pop_size = [50, 70, 100] 
+    pop_size = [20, 30, 50, 70, 100] 
     #int(pop_size*0.5)
-    mating_pool_size = [20, 30, 50] # has to be even
-    tournament_size = [4,6,10]
+    mating_pool_size = [10, 16, 20, 30, 50] # has to be even
+    tournament_size = [6,10,15,20,25]
     xover_rate = [0.1, 0.3, 0.5, 0.7, 0.9]
     mut_rate = [0.1, 0.3, 0.5, 0.7, 0.9]
     gen_limit = [50, 75, 100, 125, 150]
@@ -154,6 +154,6 @@ def stats(num_tries):
     '''
     fitnesses=[]
     for i in range(num_tries):
-        fitness = main(50,50,10,0.9,0.5,150,verbose=False)
+        fitness = main(50,50,15,0.9,0.5,150,verbose=False)
         fitnesses.append(fitness)
     print("Average Max Fitness: "+str(sum(fitnesses)/len(fitnesses)))
