@@ -46,7 +46,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
     random.seed()
     numpy.random.seed()
 
-    #parameters set by the hotel requirements 
+    #parameters set by the hotel requirements for how many people they want to book for 
     num_guests = 70 #should be multiples of 14
     num_guests_per_room = 5
     max_days = 3000 #number of days the hotel is booking for
@@ -54,10 +54,12 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
 
     # initialize population and starting fitness values
     gen = 0 # initialize the generation counter
+    num_evals = 0 #count number of fitness evals as an efficiency measure
     population, backups, hotel, guests = initialization.permutation(pop_size, num_guests, num_guests_per_room)
     greedy_res = other_approaches.greedy(num_guests, num_guests_per_room, max_days, guests, hotel)
     fitness = []
     for i in range (0, pop_size):
+        num_evals+=1
         fitness.append(evaluation.fitness(population[i], hotel, guests, max_days))
 
     if verbose:
@@ -98,6 +100,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
             offspring_fitness.append(evaluation.fitness(off1, hotel, guests, max_days))
             offspring.append(off2)
             offspring_fitness.append(evaluation.fitness(off2, hotel, guests, max_days))
+            num_evals+=2
             i+=2  # update the counter
 
         #survivour selection to make the population of next generation
@@ -111,6 +114,12 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
             print("generation", gen, ": best fitness", max(fitness), "average fitness", sum(fitness)/len(fitness))
         max_fitnesses.append(max(fitness))
         avg_fitnesses.append(sum(fitness)/len(fitness))
+        
+        if gen > 15:
+            if sum(numpy.absolute(numpy.diff(max_fitnesses[-15:])))/15 < 5:
+                if verbose:
+                    print("Stopping evoluation early, quality has stopped improving.")
+                break
 
     # evolution ends
     # print the final best solution(s)
@@ -124,7 +133,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
         visualization(max_fitnesses,avg_fitnesses,guests,greedy_res)
         #compare to alternate approach
         print("greedy solution and fitness: "+str(greedy_res))
-    return max(fitness)
+    return max(fitness), num_evals
 
 def param_tuning():
     '''
@@ -145,7 +154,7 @@ def param_tuning():
     max_fit = 0
     max_arr = ()
     for arr in params:
-        fitness = main(*arr,verbose=False)
+        fitness = main(*arr,verbose=False)[0]
         if fitness >= max_fit:
             max_fit=fitness
             max_arr=arr
@@ -159,15 +168,19 @@ def stats(num_tries,threshold):
     - average number of evaluations
     '''
     fitnesses=[]
+    num_evals=[]
     num_past_threshold=0
     for i in range(num_tries):
-        fitness = main(50,50,15,0.9,0.5,150,verbose=True)
+        metrics = main(50,50,15,0.9,0.5,150,verbose=False)
+        fitness = metrics[0]
+        num_evals.append(metrics[1])
         if fitness > threshold:
             num_past_threshold+=1
         fitnesses.append(fitness)
     print("Mean Best Fitness: "+str(sum(fitnesses)/len(fitnesses)))
     print("Success Rate: "+ str(num_past_threshold/num_tries))
+    print("AES: "+str(sum(num_evals)/len(num_evals)))
     sns.histplot(data=fitnesses)
     plt.show()
 
-stats(1,370000)
+stats(200,370000)
