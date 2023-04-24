@@ -49,7 +49,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
     #parameters set by the hotel requirements for how many people they want to book for 
     num_guests = 70 #should be multiples of 14
     num_guests_per_room = 5
-    max_days = 30 #number of days the hotel is booking for
+    max_days = 60 #number of days the hotel is booking for
     #other parameters are set by the calling function, were tuned through hyperparameter control
 
     # initialize population and starting fitness values
@@ -175,7 +175,7 @@ def stats(num_tries,threshold):
     total_time = []
     num_past_threshold=0
     for i in range(num_tries):
-        metrics = main(50,50,15,0.9,0.5,150,verbose=True)
+        metrics = main(50,50,15,0.9,0.5,150,verbose=False)
         fitness = metrics[0]
         num_evals.append(metrics[1])
         total_time.append(metrics[2])

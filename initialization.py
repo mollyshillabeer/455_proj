@@ -63,11 +63,12 @@ def make_guest_file():
 
 def make_guests(num_guests):
     '''Returns a list of guest objects, number of which is specified in main.'''
+    ratings = [5,5,5,5,5,5,5,5,5,5,4,4,3,2,1] #most guests have 5 star ratings
     df=pd.read_csv('guests.csv')
     guests = []
     for i in range(num_guests):
         curr_row=df.iloc[i]
-        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration,accessible=rand_select(10),smoke_free=rand_select(10)))
+        guests.append(GuestGroup(curr_row.num_guests,curr_row.duration,accessible=rand_select(10),smoke_free=rand_select(10),rating=random.choice(ratings)))
     return guests
 
 #TODO: could do a second version that allows for conflicts in room sizes

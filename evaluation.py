@@ -20,7 +20,9 @@ def fitness(individual,rooms,guests,max_days):
                 #if a guest group can't fit in the room, they can't be booked, so no profit
                 #also if the guest requires an accessible room or a smoke free room
                 #profit is calculated as cost per night*number of nights
+                #then subtract from the fitness if the guest has a bad rating,because they are more likely to trash the room
                 if currGuest.size <= currRoom.size and ((currGuest.accessible and currRoom.accessible) or not currGuest.accessible) \
                     and ((currGuest.smoke_free and currRoom.smoke_free) or not currGuest.smoke_free):
                     fitness+=(currRoom.base_cost+currRoom.cost_per_person*currGuest.size)*currGuest.num_days
+                    fitness-= (50-currGuest.rating*10)
     return fitness
