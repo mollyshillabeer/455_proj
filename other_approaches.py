@@ -5,6 +5,8 @@ import evaluation
 import time
 from operator import attrgetter
 
+#TODO: another approach would be first come first serve, would mimic how booking works now
+
 def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
     '''
     Greedy approach to solving this problem. Fills the most expensive rooms first, with the largest groups possible.

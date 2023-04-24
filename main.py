@@ -49,7 +49,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
     #parameters set by the hotel requirements for how many people they want to book for 
     num_guests = 70 #should be multiples of 14
     num_guests_per_room = 5
-    max_days = 3000 #number of days the hotel is booking for
+    max_days = 30 #number of days the hotel is booking for
     #other parameters are set by the calling function, were tuned through hyperparameter control
 
     # initialize population and starting fitness values
