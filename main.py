@@ -21,7 +21,7 @@ import other_approaches
 def visualization(maxes,avgs,guests,greedy_fitness):
     #plot max fitness per generation
     ax = sns.lineplot(data=maxes)
-    ax.axhline(370000)
+    ax.axhline(greedy_fitness[1])
     ax.set(xlabel="generation",ylabel="fitness",title="Max Fitness by Generation")
     plt.show()
     
@@ -135,7 +135,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
         visualization(max_fitnesses,avg_fitnesses,guests,greedy_res)
         #compare to alternate approach
         print("greedy solution and fitness: "+str(greedy_res))
-    return max(fitness), num_evals, elapsed_time
+    return max(fitness), num_evals, elapsed_time, greedy_res[1]
 
 def param_tuning():
     '''
@@ -172,15 +172,18 @@ def stats(num_tries,threshold):
     fitnesses=[]
     num_evals=[]
     total_time = []
+    greedy_fitnesses=[]
     num_past_threshold=0
     for i in range(num_tries):
         metrics = main(50,44,15,0.9,0.5,150,verbose=True)
         fitness = metrics[0]
         num_evals.append(metrics[1])
         total_time.append(metrics[2])
+        greedy_fitnesses.append(metrics[3])
         if fitness > threshold:
             num_past_threshold+=1
         fitnesses.append(fitness)
+    print("Mean Greedy Fitness: "+str(sum(greedy_fitnesses)/len(greedy_fitnesses)))
     print("Mean Best Fitness: "+str(sum(fitnesses)/len(fitnesses)))
     print("Success Rate: "+ str(num_past_threshold/num_tries))
     print("AES: "+str(sum(num_evals)/len(num_evals)))
