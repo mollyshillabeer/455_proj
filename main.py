@@ -21,7 +21,6 @@ import other_approaches
 def visualization(maxes,avgs,guests,greedy_fitness):
     #plot max fitness per generation
     ax = sns.lineplot(data=maxes)
-    ax.axhline(greedy_fitness[1])
     ax.axhline(370000)
     ax.set(xlabel="generation",ylabel="fitness",title="Max Fitness by Generation")
     plt.show()
@@ -175,7 +174,7 @@ def stats(num_tries,threshold):
     total_time = []
     num_past_threshold=0
     for i in range(num_tries):
-        metrics = main(50,50,15,0.9,0.5,150,verbose=False)
+        metrics = main(50,44,15,0.9,0.5,150,verbose=True)
         fitness = metrics[0]
         num_evals.append(metrics[1])
         total_time.append(metrics[2])

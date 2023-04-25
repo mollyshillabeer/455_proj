@@ -25,5 +25,5 @@ def fitness(individual,rooms,guests,max_days):
                     and ((currGuest.smoke_free and currRoom.smoke_free) or not currGuest.smoke_free):
                     fitness+=(currRoom.base_cost+currRoom.cost_per_person*currGuest.size)*currGuest.num_days
                     if currGuest.rating < 4:
-                        fitness -= (500-currGuest.rating*100)
+                        fitness -= (50-currGuest.rating*10)
     return fitness

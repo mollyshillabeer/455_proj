@@ -27,7 +27,7 @@ def greedy(num_guests, num_guests_per_room, max_days, guests, hotel):
         possible_guests = [a for a in guests_dict if guests_dict[a].size<=hotel[next_room].size]
         possible_guests = [a for a in possible_guests if (guests_dict[a].accessible==hotel[next_room].accessible or not guests_dict[a].accessible)]
         possible_guests = [a for a in possible_guests if (guests_dict[a].smoke_free==hotel[next_room].smoke_free or not guests_dict[a].smoke_free)]
-        selected_guests = sorted(possible_guests,key=lambda x: guests[x].size, reverse=True)
+        selected_guests = sorted(possible_guests,key=lambda x: guests[x].size*guests[x].num_days, reverse=True)
         
         #pick the correct number of guests
         if len(selected_guests) >= num_guests_per_room:
