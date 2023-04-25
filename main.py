@@ -85,7 +85,7 @@ def main(pop_size,mating_pool_size,tournament_size,xover_rate,mut_rate,gen_limit
         
             #recombination
             if random.random() < xover_rate:            
-                off1,off2 = recombination.permutation_cut_and_crossfill(population[parents_index[i]], population[parents_index[i+1]], hotel, guests)
+                off1,off2 = recombination.permutation_1_point_swap(population[parents_index[i]], population[parents_index[i+1]], hotel, guests)
             else:
                 off1 = population[parents_index[i]].copy()
                 off2 = population[parents_index[i+1]].copy()

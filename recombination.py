@@ -9,7 +9,7 @@ def find_room(arr, target):
             if arr[i][j] == target:
                 return i, j
             
-def permutation_cut_and_crossfill (p1, p2, rooms, guests):
+def permutation_1_point_swap (p1, p2, rooms, guests):
     # Randomly Select a Guest
     selected_guest = random.randint(0, len(guests)-1)
 
